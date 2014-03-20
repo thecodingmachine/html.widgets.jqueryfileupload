@@ -17,11 +17,12 @@
         "mouf/javascript.jquery.jquery-file-upload": "*",
         "mouf/html.htmlelement": "~2.0",
         "mouf/utils.session.session-manager": "~2.0",
-        "mouf/utils.common.getvars": "~2.0"
+        "mouf/utils.common.getvars": "~2.0",
+        "mouf/html.renderer" : "~1.0"
     },
     "autoload": {
         "psr-4": {
-            "Mouf\\Html\\Widgets\\JqueryFileUpload\\": "src/"
+            "Mouf\\Html\\Widgets\\JqueryFileUpload\\": "src/Mouf/Html/Widgets/JqueryFileUpload"
         }
     },
 	"extra": {
@@ -34,6 +35,11 @@
 				{
 					"title": "Tutorial",
 					"url": "doc/tutorial.md"
+				}
+			],
+			"install" : [{
+					"class" : "Mouf\\Html\\Widgets\\JqueryFileUpload\\JqueryFileUploadInstaller",
+					"type" : "class"
 				}
 			]
 		}
