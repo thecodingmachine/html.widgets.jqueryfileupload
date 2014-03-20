@@ -21,7 +21,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Mouf\\Html\\Widgets\\JqueryFileUpload": "src/"
+            "Mouf\\Html\\Widgets\\JqueryFileUpload\\": "src/"
         }
     },
 	"extra": {
