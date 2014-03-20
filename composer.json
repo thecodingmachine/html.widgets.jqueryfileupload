@@ -1,0 +1,42 @@
+{
+    "name": "mouf/html.widgets.jqueryfileupload",
+    "description": "This package contains an upload widget based on the 'jQuery file upload' plugin. This allows easy uploading of files.",
+    "keywords": ["mouf", "html", "widget", "file", "uploader", "jqueryFileUpload"],
+    "homepage": "http://mouf-php.com/packages/mouf/html.widgets.jqueryfileupload",
+    "type": "mouf-library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Négrier",
+            "email": "d.negrier@thecodingmachine.com",
+            "homepage": "http://mouf-php.com"
+        }
+    ],
+    "require": {
+    	"php": ">=5.3.0",
+        "mouf/javascript.jquery.jquery-file-upload": ">=2.0-dev,<3.0",
+        "mouf/html.htmlelement": ">=2.0-dev,<3.0",
+        "mouf/utils.session.session-manager": ">=2.0-dev,<3.0",
+        "mouf/utils.common.getvars": ">=2.0,<3.0"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Mouf\\Html\\Widgets\\JqueryFileUpload": "src/"
+        }
+    },
+	"extra": {
+		"mouf": {
+			"doc": [
+				{
+					"title": "Install",
+					"url": "doc/install.md"
+				},
+				{
+					"title": "Tutorial",
+					"url": "doc/tutorial.md"
+				}
+			]
+		}
+	}
+}
