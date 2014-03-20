@@ -14,12 +14,11 @@
     ],
     "require": {
     	"php": ">=5.3.0",
-        "mouf/javascript.jquery.jquery-file-upload": ">=2.0-dev,<3.0",
-        "mouf/html.htmlelement": ">=2.0-dev,<3.0",
-        "mouf/utils.session.session-manager": ">=2.0-dev,<3.0",
-        "mouf/utils.common.getvars": ">=2.0,<3.0"
+        "mouf/javascript.jquery.jquery-file-upload": "~9.5",
+        "mouf/html.htmlelement": "~2.0",
+        "mouf/utils.session.session-manager": "~2.0",
+        "mouf/utils.common.getvars": "~2.0"
     },
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Mouf\\Html\\Widgets\\JqueryFileUpload": "src/"
