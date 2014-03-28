@@ -1,5 +1,5 @@
 <?php
-namespace Mouf\Html\Widgets\FileUploaderWidget;
+namespace Mouf\Html\Widgets\JqueryFileUpload;
 
 class JsFileUploader {
     private $allowedExtensions = array();

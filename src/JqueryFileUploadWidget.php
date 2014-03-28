@@ -1,5 +1,5 @@
 <?php
-namespace Mouf\Html\Widgets\FileUploaderWidget;
+namespace Mouf\Html\Widgets\JqueryFileUpload;
 
 
 use Mouf\MoufManager;

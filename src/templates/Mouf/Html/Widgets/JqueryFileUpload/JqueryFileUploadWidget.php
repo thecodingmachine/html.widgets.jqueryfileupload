@@ -5,7 +5,7 @@
     <i class="glyphicon glyphicon-plus"></i>
     <span>Select files...</span>
     <!-- The file input field used as target for the file upload widget -->
-    <input type="file" multiple="" name="files[]" id="fileupload">
+    <input type="file" multiple="multiple" name="files[]" id="fileupload">
 </span>
 <script type="text/javascript">
 $(function () {
