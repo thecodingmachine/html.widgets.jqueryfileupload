@@ -1,91 +1,63 @@
-How to use Simple File Uploader
-===============================
+How to use jQueryFileUpload
+===========================
 
-This object provides a simple use of File Upload with few lines of code.
-When you upload a file, it is saved in temp folder. After the form save you could retrieve all file send and move it in your folder
+Absolutely minimal use of the widget
+------------------------------------
 
-Step 1: create instance
------------------------
+In your controller, you need to create an instance of the `JqueryFileUploadWidget` class.
+You can create this instance in Mouf, or right in your controller.
 
-Create an instance of Simple File Uploader. In our example is named : simpleFileUpload
-![File Upload create instance](https://raw.github.com/thecodingmachine/html.widgets.fileuploaderwidget/2.0/doc/images/create_instance.png)
-![File Upload create instance found](https://raw.github.com/thecodingmachine/html.widgets.fileuploaderwidget/2.0/doc/images/create_instance_found.png)
-![File Upload create instance name](https://raw.github.com/thecodingmachine/html.widgets.fileuploaderwidget/2.0/doc/images/create_instance_name.png)
+Assuming you are using Splash with a template, the minimal code to create a form with an upload widget would look like this:
 
-Next, set the parameters :
- - input name: It's like the name of your input element in a form;
- - directory: to store your file;
- - session: sessionManagerInterface to start the session automatically.
+###src/views/MyController.php'
+```php
+class MyController extends Controller {
 
+	public function __construct() {
+		// Instead of creating the widget in the constructor, you will problably want to inject
+		// it via dependency injection. We do this to keep the sample short enough.
+		$this->fileUploadWidget = new JqueryFileUploadWidget();
+		// The only property we really need to set is the "name" property.
+		$this->fileUploadWidget->setName("files");
+	}
 
-Others parameters are mandatory. The most important:
- - OnlyOneFile: If you want to send only 1 file (many by default). This delete the file contain in the destination folder to store only one. Note: it's not a graphic parameter;
- - noTemporary : You can activate it to don't send the file in the temporary folder. The file is saved in the destination folder;
- - fileExtensions: Limit the extension name of file send;
- - sizeLimit: The max size of file in byte;
- - minSizeLimit: The min size of file in byte;
- - fileName: To rename the file with a name;
- - multiple: authorize the user to send many file in 1 time (by drag & drop or explorer). Note: It's only a graphic parameter.
-
-![File Upload instance](https://raw.github.com/thecodingmachine/html.widgets.fileuploaderwidget/2.0/doc/images/instance.png)
-
-
-Add in your controller
-----------------------
-Add your instance in your controller
-```
 	/**
-	 *
-	 * @var SimpleFileUploaderWidget
+	 * @URL uploadtest
+	 * @Get
 	 */
-	public $fileUpload;
+	public function index() {
+		$this->content->addFile(ROOT_PATH.'src/views/upload.php');
+		$this->template->toHtml();
+	}
+	
+	/**
+	 * @URL uploadtest
+	 * @Post
+	 */
+	public function testdavid3post() {
+		// Once the post is received, the files are accessible through the getFiles method.
+		foreach ($this->fileUploadWidget->getFiles() as $file) {
+			$file->move(ROOT_PATH.'/tmp/');
+		}
+	}
+}
 ```
 
-In Mouf add to your controller the fileUpload instance
-![File Upload instance to controller](https://raw.github.com/thecodingmachine/html.widgets.fileuploaderwidget/2.0/doc/images/controller.png)
-
-Add in your form
-------------------------
-Add the code in your form to display the button :
-
-```
-<form action="your_method" method="post">
-<?php
-	$this->fileUpload->toHtml();
-?>
-<input type="submit" name="submit" value="Send" />
+###src/views/upload.php'
+```php
+<form method='post'>
+	<?php 
+		// Let's render the widget
+		$fileUploadWidget->toHtml();
+	?>
+	<button type='submit'>Submit</button>
 </form>
 ```
-![File Upload form](https://raw.github.com/thecodingmachine/html.widgets.fileuploaderwidget/2.0/doc/images/form.png)
 
-Retrieve your files
----------------------------
-In the save action, you could retrieve the file. The parameter is the name of hidden input passed in inputName (above).
+As you can see, this is fairly minimal.
+Here is what happens behind the scene.
 
-Move all file in your folder:
-```
-	$this->fileupload->moveFile();
-```
-If you want to change the destination folder (example: to add an id)
-```
-	$this->fileupload->moveFile(null, 'my_new_folder');
-```
-
-There is a function to get the list of files in temporary folder:
-```
-	$this->fileupload->hasFileToMove();
-```
-
-In listener afterUpload
------------------------
-Your controller (class) must implements FileUploaderOnUploadInterface. you will add 2 functions beforeUpload and afterUpload.
-In afterUpload you could move your file with the function moveFileWithoutSave. The first parameter is ALWAYS $result['targetFolder'].
-```
-	$this->fileUpload->moveFileWithoutSave();
-```
-
-A quick note about file encoding
------------------------
-If a user tries to input non-latin character in the uploaded file name, the file name will be URL-encoded before being
-stored on the server's disk. This is because all file systems do not support the same character sets. By URL-encoding the
-file name, we make sure the file name can be read on any operating system.
+When the widget is displayed on the screen, the user can upload any number of files. The files are directed to a temporary
+directory on the server. When the user submits the form, the files are fetched from the temporary directory (using the
+`getFiles` method). From there, you can do whatever you want with the files. Most likely, you will want to move them
+in a special directory to archive them, or you may want to rename them. 

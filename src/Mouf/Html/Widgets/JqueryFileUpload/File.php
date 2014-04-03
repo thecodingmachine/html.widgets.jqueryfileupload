@@ -7,6 +7,7 @@ use Mouf\Html\HtmlElement\HtmlElementInterface;
 use Mouf\Utils\Value\ValueUtils;
 use Mouf\Utils\Value\ValueInterface;
 use Mouf\Html\Renderer\Renderable;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * This class represent a file that was just uploaded.
@@ -52,11 +53,14 @@ class File {
 	 * @param string $targetDir
 	 */
 	public function move($targetDir) {
-		if (!file_exists($targetDir)) {
-			mkdir($targetDir, 0775, true);
+		$fs = new Filesystem();
+		if (!$fs->exists($targetDir)) {
+			$fs->mkdir($targetDir, 0775);
+			chmod($targetDir, 0775);
 		}
 		
-		rename($this->directory.'/'.$this->fileName, $targetDir.'/'.$this->fileName);
+		$fs->rename($this->directory.'/'.$this->fileName, $targetDir.'/'.$this->fileName);
+		$fs->chmod($targetDir.'/'.$this->fileName, 0664);
 		$this->directory = $targetDir;
 	}
 	
@@ -66,7 +70,10 @@ class File {
 	 * @param string $newFileName
 	 */
 	public function rename($newFileName) {
-		rename($this->directory.'/'.$this->fileName, $this->directory.'/'.$this->$newFileName);
+		$fs = new Filesystem();
+		
+		$fs->rename($this->directory.'/'.$this->fileName, $this->directory.'/'.$this->$newFileName);
+		$fs->chmod($this->directory.'/'.$this->$newFileName, 0664);
 		$this->fileName = $newFileName;
 	}
 	
@@ -77,11 +84,14 @@ class File {
 	 * @param string $newFileName
 	 */
 	public function moveAndRename($targetDir, $newFileName) {
-		if (!file_exists($targetDir)) {
-			mkdir($targetDir, 0775, true);
+		$fs = new Filesystem();
+		if (!$fs->exists($targetDir)) {
+			$fs->mkdir($targetDir, 0775);
+			chmod($targetDir, 0775);
 		}
 		
-		rename($this->directory.'/'.$this->fileName, $targetDir.'/'.$newFileName);
+		$fs->rename($this->directory.'/'.$this->fileName, $targetDir.'/'.$newFileName);
+		$fs->chmod($targetDir.'/'.$newFileName, 0664);
 		$this->directory = $targetDir;
 		$this->fileName = $newFileName;
 	}
