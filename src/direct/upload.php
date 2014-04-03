@@ -1,8 +1,11 @@
 <?php
-use Mouf\Html\Widgets\FileUploaderWidget\JsFileUploader;
+use Mouf\Html\Widgets\JqueryFileUpload\JqueryFileUploadWidget;
 use Mouf\MoufManager;
 
 require_once '../../../../../mouf/Mouf.php';
+
+// The blueimp package does not feature an autoloader, so let's autoload manually.
+require_once '../../../../blueimp/jquery-file-upload/server/php/UploadHandler.php';
 
 if (!defined('ROOT_URL') && function_exists('apache_getenv')) {
 	define('ROOT_URL', apache_getenv("BASE")."/../../../../../");
@@ -11,9 +14,16 @@ if (!defined('ROOT_URL') && function_exists('apache_getenv')) {
 $moufManager = MoufManager::getMoufManager();
 $moufManager->getInstance('sessionManager')->start();
 
-$uniqueId = $_REQUEST['uniqueId'];
+$token = $_REQUEST['jqueryFileUploadUniqueId'];
+$targetDir = $_SESSION['mouf_jqueryfileupload_autorizeduploads'][$token];
 
-$sessArray = array("path"=>$_REQUEST['path'],
+header('Content-Type: application/json');
+
+$upload_handler = new UploadHandler([
+		'upload_dir'=>$targetDir
+]);
+
+/*$sessArray = array("path"=>$_REQUEST['path'],
 		"fileId"=>$_REQUEST['fileId'],
 		"instanceName"=>$_REQUEST['instanceName']);
 
@@ -28,8 +38,9 @@ $fileName = '';
 if(isset($_REQUEST['fileName'])) {
 	$fileName = $_REQUEST['fileName'];
 }
-if(!$fileName)
+if(!$fileName) {
 	$fileName = null;
+}
 if (empty($sessArray['instanceName'])) {
 	$returnArray['error'] = 'No instance name';
 	echo json_encode($returnArray);
@@ -37,7 +48,7 @@ if (empty($sessArray['instanceName'])) {
 }
 $instance = $moufManager->getInstance($sessArray['instanceName']);
 
-if(!isset($_SESSION["mouf_fileupload_autorizeduploads"]) || !is_array($_SESSION["mouf_fileupload_autorizeduploads"][$uniqueId])){
+if(!isset($_SESSION["mouf_fileupload_autorizeduploads"]) || !is_array($_SESSION["mouf_fileupload_autorizeduploads"][$uniqueId])) {
 	$returnArray['error'] = 'session error';
 	echo json_encode($returnArray);
 	exit;
@@ -76,7 +87,7 @@ if(!$fileName) {
 	else
 		$fileName = $uploader->getFileName();
 }
-/* @var $instance FileUploaderWidget */
+/* @var $instance FileUploaderWidget * /
 // Call listener Before
 
 $continue = $instance->triggerBeforeUpload($targetFile, $fileName, $sessArray["fileId"], $returnArray, $uniqueId);
@@ -103,3 +114,4 @@ if (!isset($returnArray['error'])) {
 $instance->triggerAfterUpload($targetFile, $sessArray["fileId"], $returnArray, $uniqueId);
 
 echo htmlspecialchars(json_encode($returnArray), ENT_NOQUOTES);
+*/

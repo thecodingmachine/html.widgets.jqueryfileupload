@@ -18,7 +18,8 @@
         "mouf/html.htmlelement": "~2.0",
         "mouf/utils.session.session-manager": "~2.0",
         "mouf/utils.common.getvars": "~2.0",
-        "mouf/html.renderer" : "~1.0"
+        "mouf/html.renderer" : "~1.0",
+        "symfony/filesystem" : "~2.3"
     },
     "autoload": {
         "psr-4": {

@@ -23,7 +23,10 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 	 * @var int
 	 */
 	protected static $count = 0;
+	protected $number;
 	
+	// TODO: think about replacing this with an object in charge of pointing to the right place.
+	protected $uploadDir;
 	
 	protected $name;
 	protected $formAcceptCharset;
@@ -42,6 +45,90 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 	protected $maxNumberOfFiles;
 	protected $disableValidation;
 	
+	// A unique token representing the folder containing the files uploaded via this file uploader.
+	protected $token;
+	
+	public function __construct() {
+		$this->number = self::$count;
+		self::$count++;
+	}
+	
+	/**
+	 * Sets the name attribute of the hidden input field that will contain the token pointing to the directory that
+	 * contains the files. 
+	 * 
+	 * @param string $name
+	 * @return self
+	 */
+	public function setName($name) {
+		$this->name = $name;
+		return $this;
+	}
+	
+	public function getName() {
+		if ($this->name !== null) {
+			return $this->name;
+		} else {
+			return "jquery_mouf_fileupload_".$this->number;
+		}
+	}
+	
+	/**
+	 * Create a unique token representing the directory that
+	 * contains the files (and stores the token in the session.
+	 * 
+	 * @return string
+	 */
+	protected function createNewToken() {
+		$moufManager = MoufManager::getMoufManager();
+		$moufManager->getInstance('sessionManager')->start();
+		
+		$this->token = date('YmdHis').rand(0, 9999999);
+		
+		$_SESSION["mouf_jqueryfileupload_autorizeduploads"][$this->token] = $this->getTmpDirectory();
+		
+		return $this->token;
+	}
+	
+	protected function getTokenFromRequest() {
+		$this->token = $_REQUEST[$this->getName()];
+		return $this->token;
+	}
+	
+	/**
+	 * Returns a unique token representing the directory that
+	 * contains the files (and stores the token in the session.
+	 * 
+	 * @return string
+	 */
+	public function getToken() {
+		return $this->token;
+	}
+	
+	/**
+	 * Returns the fully qualified path to a temporary directory where uploaded files will be stored.
+	 */
+	protected function getTmpDirectory() {
+		return sys_get_temp_dir().'/mouf_jqueryfileupload_files/'.$this->token.'/';
+	}
+	
+	/**
+	 * Returns the absolute path of the upload directory.
+	 * @return string
+	 */
+	/*public function getAbsoluteUploadDir() {
+		return ROOT_PATH.$this->uploadDir;
+	}*/
+	
+	/**
+	 * Upload directory, relative to ROOT_PATH.
+	 * 
+	 * @param string $uploadDir
+	 */
+	/*public function setUploadDir($uploadDir) {
+		$this->uploadDir = $uploadDir;
+	}*/
+	
 	/**
 	 * The parameter name for the file form data (the request argument name).
 	 * If undefined or empty, the name property of the file input field is used, or "files[]" if the file input name property is also empty. Can be a string or an array of strings.
@@ -51,10 +138,10 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 	 * @param string|array<string> $name
 	 * @return \Mouf\Html\Widgets\FileUploaderWidget\JqueryFileUploadWidget
 	 */
-	public function setName($name) {
+	/*public function setName($name) {
 		$this->name = $name;
 		return $this;
-	}
+	}*/
 	
 	/**
 	 * Allows to set the accept-charset attribute for the iframe upload forms.
@@ -451,13 +538,12 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 	 *
 	 */
 	public function toHtml() {
-		self::$count++;
-		$this->id = "jquery_mouf_fileupload_".self::$count;
+		$this->id = "jquery_mouf_fileupload_".$this->number;
 		
 		$options = [];
-		if ($this->name !== null) {
+		/*if ($this->name !== null) {
 			$this->options['paramName'] = $this->name;
-		}
+		}*/
 		if ($this->formAcceptCharset !== null) {
 			$this->options['formAcceptCharset'] = $this->formAcceptCharset;
 		}
@@ -498,27 +584,55 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 			$this->options['disableValidation'] = $this->disableValidation;
 		}
 		
-		$this->options['url'] = ROOT_URL.'vendor/mouf.html.widgets.jqueryfileupload/src/direct/upload.php';
+		$this->options['url'] = ROOT_URL.'vendor/mouf/html.widgets.jqueryfileupload/src/direct/upload.php';
 		
 		// TODO: embedFormData
 		
+		// Start a session using the session manager.
+		$token = $this->createNewToken();
+		
+		$this->options['formData'][] = [
+			"name" => "jqueryFileUploadUniqueId",
+			"value" => $token
+		];
+		
 		self::toHtmlParent();
 
-		// Start a session using the session manager.
-		$moufManager = MoufManager::getMoufManager();
-		$moufManager->getInstance('sessionManager')->start();
 		
-		$uniqueId = date('YmdHis').rand(0, 9999999);
-		$moufManager = MoufManager::getMoufManager();
-		$moufManager->findInstanceName($this);
-		$thisInstanceName = $moufManager->findInstanceName($this);
 		
-		$_SESSION["mouf_fileupload_autorizeduploads"][$uniqueId] = array("path"=>$this->getFileUploadPath(),
-				"fileId"=>$this->fileId,
-				"instanceName"=>$thisInstanceName);
-		if($this->params === null)
+//		$moufManager = MoufManager::getMoufManager();
+//		$moufManager->findInstanceName($this);
+//		$thisInstanceName = $moufManager->findInstanceName($this);
+		
+// 		$_SESSION["mouf_fileupload_autorizeduploads"][$uniqueId] = array(/*"path"=>$this->getFileUploadPath(),
+// 				"fileId"=>$this->fileId,*/
+// 				"instanceName"=>$thisInstanceName);
+		/*if($this->params === null)
 			$this->params = array();
-		$_SESSION["mouf_fileupload_autorizeduploads"][$uniqueId]['params'] = serialize($this->params);
+		$_SESSION["mouf_fileupload_autorizeduploads"][$uniqueId]['params'] = serialize($this->params);*/
+	}
+	
+	/**
+	 *
+	 * @return array
+	 */
+	public function getOptions() {
+		return $this->options;
+	}
+	
+	/**
+	 * 
+	 * @return string
+	 */
+	public function getId() {
+		return $this->id;
+	}
+	public function getUploadDir() {
+		return $this->uploadDir;
+	}
+	public function setUploadDir($uploadDir) {
+		$this->uploadDir = $uploadDir;
+		return $this;
 	}
 	
 	
@@ -723,5 +837,30 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 // 			}
 // 		}
 // 	}
+
+	/**
+	 * Returns an array of file objets that have been uploaded with this widget.
+	 * 
+	 * @param string $token You can pass optionnally the token for this widget. Otherwise, it is retrieved from the request, based on the "name" parameter.
+	 */
+	public function getFiles($token = null) {
+		if (!$token) {
+			$token = $this->getTokenFromRequest();
+		}
+		$this->token = $token;
+		
+		$moufManager = MoufManager::getMoufManager();
+		$moufManager->getInstance('sessionManager')->start();
+		
+		$tmpDirectory = $_SESSION["mouf_jqueryfileupload_autorizeduploads"][$this->token];
+		
+		$files = array();
+		foreach (new \DirectoryIterator($tmpDirectory) as $fileInfo) {
+			if ($fileInfo->isFile()) {
+				$files[] = new File($fileInfo->getFilename(), $fileInfo->getPath());
+			}
+		}
+		return $files;
+	}
 }
 ?>
