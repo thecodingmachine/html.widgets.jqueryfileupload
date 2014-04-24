@@ -29,6 +29,8 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 	protected $uploadDir;
 	
 	protected $name;
+	// Name of the hidden input fields that contains the list of files to delete (if any)
+	protected $deleteName;
 	protected $formAcceptCharset;
 	protected $dropZoneCssSelector = "body";
 	protected $pasteZoneCssSelector = "body";
@@ -47,6 +49,12 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 	
 	// A unique token representing the folder containing the files uploaded via this file uploader.
 	protected $token;
+	
+	/**
+	 * The list of files that will be displayed below the file upload.
+	 * @var FileWidget[]
+	 */
+	protected $files = array();
 	
 	public function __construct() {
 		$this->number = self::$count;
@@ -70,6 +78,26 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 			return $this->name;
 		} else {
 			return "jquery_mouf_fileupload_".$this->number;
+		}
+	}
+	
+	/**
+	 * Sets the name attribute of the hidden input field that will contain the list of files to delete
+	 * (in the case of files already there by default that we need to remove) 
+	 * 
+	 * @param string $deleteName
+	 * @return self
+	 */
+	public function setDeleteName($deleteName) {
+		$this->deleteName = $deleteName;
+		return $this;
+	}
+	
+	public function getDeleteName() {
+		if ($this->deleteName !== null) {
+			return $this->deleteName;
+		} else {
+			return $this->getName()."_delete";
 		}
 	}
 	
@@ -220,7 +248,7 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 	 * 
 	 * See: https://github.com/blueimp/jQuery-File-Upload/wiki/Options#progressinterval
 	 * 
-	 * @param int $bitrateInterval
+	 * @param int $progressInterval
 	 * @return \Mouf\Html\Widgets\FileUploaderWidget\JqueryFileUploadWidget
 	 */
 	public function setProgressInterval($progressInterval) {
@@ -855,12 +883,31 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 		$tmpDirectory = $_SESSION["mouf_jqueryfileupload_autorizeduploads"][$this->token];
 		
 		$files = array();
-		foreach (new \DirectoryIterator($tmpDirectory) as $fileInfo) {
-			if ($fileInfo->isFile()) {
-				$files[] = new File($fileInfo->getFilename(), $fileInfo->getPath());
+		if (is_dir($tmpDirectory)) {
+			foreach (new \DirectoryIterator($tmpDirectory) as $fileInfo) {
+				if ($fileInfo->isFile()) {
+					$files[] = new File($fileInfo->getFilename(), $fileInfo->getPath());
+				}
 			}
 		}
 		return $files;
+	}
+	
+	/**
+	 * 
+	 * @return JqueryFileUploadWidget[]
+	 */
+	public function getDefaultFiles() {
+		return $this->files;
+	}
+	
+	/**
+	 * Add a file that will be displayed in the list of files.
+	 * 
+	 * @param FileWidget $file
+	 */
+	public function addDefaultFile(FileWidget $file) {
+		$this->files[] = $file;
 	}
 }
 ?>

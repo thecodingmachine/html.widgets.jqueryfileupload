@@ -1,11 +1,9 @@
 <?php
 use Mouf\Html\Widgets\JqueryFileUpload\JqueryFileUploadWidget;
 use Mouf\MoufManager;
+use Mouf\Html\Widgets\JqueryFileUpload\MoufUploadHandler;
 
 require_once '../../../../../mouf/Mouf.php';
-
-// The blueimp package does not feature an autoloader, so let's autoload manually.
-require_once '../../../../blueimp/jquery-file-upload/server/php/UploadHandler.php';
 
 if (!defined('ROOT_URL') && function_exists('apache_getenv')) {
 	define('ROOT_URL', apache_getenv("BASE")."/../../../../../");
@@ -19,7 +17,7 @@ $targetDir = $_SESSION['mouf_jqueryfileupload_autorizeduploads'][$token];
 
 header('Content-Type: application/json');
 
-$upload_handler = new UploadHandler([
+$upload_handler = new MoufUploadHandler([
 		'upload_dir'=>$targetDir
 ]);
 
