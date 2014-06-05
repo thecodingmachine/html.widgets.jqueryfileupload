@@ -1,13 +1,14 @@
 <?php
 /* @var $object Mouf\Html\Widgets\JqueryFileUpload\JqueryFileUploadWidget */
 $id = htmlentities($object->getId(), ENT_QUOTES);
+$options = $object->getOptions();
 ?>
 <div id="<?= $id ?>">
 	<span class="btn btn-success fileinput-button">
 	    <i class="glyphicon glyphicon-plus"></i>
 	    <span>Select files...</span>
 	    <!-- The file input field used as target for the file upload widget -->
-	    <input type="file" multiple="multiple" name="files[]" id="fileupload">
+	    <input type="file" <?php echo (isset($options['maxNumberOfFiles']) && $options['maxNumberOfFiles'] != 1)?"multiple='multiple'":"" ?> name="files[]">
 	</span>
 	<span class="help-inline"></span>
 	<div class="progress">
@@ -27,7 +28,6 @@ jQuery(function () {
 
 	var rootElem = jQuery("#<?= $id ?>");
 	<?php
-	$options = $object->getOptions();
 	$acceptFileTypes = null;
 	if (isset($options['acceptFileTypes'])) {
 		$acceptFileTypes = $options['acceptFileTypes'];
@@ -70,6 +70,9 @@ jQuery(function () {
 		
 		jQuery.each(result.files, function (index, file) {
 			//jQuery('<p/>').text(file.name).appendTo(jQuery(rootElem).find('.files'));
+            if(options.maxNumberOfFiles == 1){
+                jQuery("#<?= $id ?> .file-delete-button").trigger("click");
+            }
 			jQuery(file.html).appendTo(jQuery(rootElem).find('.files'));
 		});
 	};
@@ -89,7 +92,7 @@ jQuery(function () {
 		}
 	}
 	
-	jQuery('#fileupload').fileupload(options).prop('disabled', !jQuery.support.fileInput)
+	jQuery('#<?= $id ?> input').fileupload(options).prop('disabled', !jQuery.support.fileInput)
 		.parent().addClass(jQuery.support.fileInput ? undefined : 'disabled');
 
 	jQuery(document).on("click", "#<?= $id ?> .file-delete-button", null, function() {
