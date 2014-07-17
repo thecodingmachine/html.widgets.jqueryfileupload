@@ -23,7 +23,7 @@ class FileWidget implements HtmlElementInterface {
 	
 	/**
 	 * 
-	 * @param string $fileName The filename
+	 * @param string $fileName The filename (full path to file)
 	 */
 	public function __construct($fileName, $id = null) {
 		$this->id = $id;
@@ -31,7 +31,7 @@ class FileWidget implements HtmlElementInterface {
 		$this->fileInfo = new \SplFileInfo($fileName);
 		
 		if (!$this->fileInfo->isFile()) {
-			return new \Exception("The file '".$this->fileName."' does not exists.");
+			throw new \Exception("The file '".$this->fileName."' does not exists.");
 		}
 	}
 
