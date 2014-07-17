@@ -1,9 +1,6 @@
 html.widgets.jqueryfileuploadwidget
 ===================================
 
-DO NOT USE THIS PACKAGE YET: NOT READY AT ALL
-=============================================
-
 This package contains an upload widget based on [jQuery File Upload](http://blueimp.github.io/jQuery-File-Upload/). This allows easy uploading of files in your application.
 
 The widget is a simple class implementing the [HtmlElementInterface](http://mouf-php.com/packages/mouf/html.htmlelement/README.md) interface.
