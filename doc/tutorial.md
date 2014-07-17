@@ -61,3 +61,21 @@ When the widget is displayed on the screen, the user can upload any number of fi
 directory on the server. When the user submits the form, the files are fetched from the temporary directory (using the
 `getFiles` method). From there, you can do whatever you want with the files. Most likely, you will want to move them
 in a special directory to archive them, or you may want to rename them. 
+
+
+Displaying previously uploaded files
+------------------------------------
+
+If you are displaying the widget in a form in edit mode, you will want to display the previously uploaded files next to the upload
+button. You can do this with the widget using the `addDefaultFile` method:
+
+```php
+
+$this->fileUploadWidget->addDefaultFile(new FileWidget($fileName, $uniqueId);
+```
+
+Customizing the display
+-----------------------
+
+The JqueryFileUpload widget is using [Mouf's rendering mechanism](http://mouf-php.com/packages/mouf/html.renderer/README.md).
+Therefore, you can easily overload the way it is displayed if you want to.
