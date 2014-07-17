@@ -870,6 +870,7 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 	 * Returns an array of file objets that have been uploaded with this widget.
 	 * 
 	 * @param string $token You can pass optionnally the token for this widget. Otherwise, it is retrieved from the request, based on the "name" parameter.
+     * @return File[]
 	 */
 	public function getFiles($token = null) {
 		if (!$token) {
