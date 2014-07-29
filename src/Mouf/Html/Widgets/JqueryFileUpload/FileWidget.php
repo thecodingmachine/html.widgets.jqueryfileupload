@@ -30,9 +30,9 @@ class FileWidget implements HtmlElementInterface {
 		$this->fileName = $fileName;
 		$this->fileInfo = new \SplFileInfo($fileName);
 		
-		if (!$this->fileInfo->isFile()) {
-			throw new \Exception("The file '".$this->fileName."' does not exists.");
-		}
+//		if (!$this->fileInfo->isFile()) {
+//			throw new \Exception("The file '".$this->fileName."' does not exists.");
+//		}
 	}
 
 	public function getFileInfo() {
