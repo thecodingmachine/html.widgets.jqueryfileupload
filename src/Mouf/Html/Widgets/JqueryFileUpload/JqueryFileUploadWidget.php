@@ -102,6 +102,14 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 	}
 	
 	/**
+	 * The id of the file uploader DOM element
+	 * @param string $id
+	 */
+	public function setId($id){
+		$this->id = $id;
+	}
+		
+	/**
 	 * Create a unique token representing the directory that
 	 * contains the files (and stores the token in the session.
 	 * 
@@ -566,7 +574,9 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 	 *
 	 */
 	public function toHtml() {
-		$this->id = "jquery_mouf_fileupload_".$this->number;
+		if($this->id == null){
+			$this->id = "jquery_mouf_fileupload_".$this->number;
+		}
 		
 		$options = [];
 		/*if ($this->name !== null) {
