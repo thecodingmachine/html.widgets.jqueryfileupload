@@ -5,7 +5,7 @@ use Mouf\Utils\Graphics\MoufImage\Filters\MoufImageFromFile;
 <span class="badge file-widget" data-id="<?php echo htmlentities($id); ?>">
 <?php  
 $extension = strtolower($object->getFileInfo()->getExtension());
-if ($extension == "png" || $extension == "gif" || $extension == "jpg") {
+if ($extension == "png" || $extension == "gif" || $extension == "jpg" || $extension == "jpeg") {
 	$origin = new MoufImageFromFile();
 	$origin->path = $object->getFileInfo()->getRealPath();
 	
