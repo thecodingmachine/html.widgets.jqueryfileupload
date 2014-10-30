@@ -14,8 +14,11 @@ class MoufUploadHandler extends \UploadHandler {
 	
 	protected function set_additional_file_properties($file) {
 		parent::set_additional_file_properties($file);
+		
+		$file_path = $this->get_upload_path($file->name);
+		
 		// Let's add the HTML representing the file to the object returned.
-		$fileWidget = new FileWidget($file->name, md5($file->name));
+		$fileWidget = new FileWidget($file_path, md5($file_path));
 		
 		ob_start();
 		$fileWidget->toHtml();

@@ -135,3 +135,10 @@ Customizing the display
 
 The JqueryFileUpload widget is using [Mouf's rendering mechanism](http://mouf-php.com/packages/mouf/html.renderer/README.md).
 Therefore, you can easily overload the way it is displayed if you want to.
+
+You just have to copy the `vendor/mouf/html.widgets.jqueryfileupload/src/templates/Mouf/Html/Widgets/JqueryFileUpload/FileWidget.php`
+into `src/templates/Mouf/Html/Widgets/JqueryFileUpload/FileWidget.php` and customize it.
+
+By default, the uploaded file renderer will display thumbnails for png, gif and jpg images.
+If you want to simply modify the size of the thumbnails or the way they are displayed, you can have a look at the
+`resizeUploadThumbnails` instance in Mouf.
