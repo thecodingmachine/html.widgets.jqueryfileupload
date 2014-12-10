@@ -898,7 +898,7 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 			foreach (new \DirectoryIterator($tmpDirectory) as $fileInfo) {
 				if ($fileInfo->isFile()) {
 					// Let's check the extension of the files.
-					if (!preg_match($this->acceptFileTypes, $fileInfo->getFilename())) {
+					if ($this->acceptFileTypes && !preg_match($this->acceptFileTypes, $fileInfo->getFilename())) {
 						throw new JqueryFileUploadException("Sorry, invalid file type for file '".$fileInfo->getFilename()."'");
 					}
 					
