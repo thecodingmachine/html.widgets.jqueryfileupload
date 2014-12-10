@@ -41,7 +41,7 @@ jQuery(function () {
         <?php if ($acceptFileTypes) { ?>
         var acceptFileTypes = <?= $acceptFileTypes ?>;
         if((data.originalFiles[0]['type'].length && !acceptFileTypes.test(data.originalFiles[0]['type']))
-                || (data.originalFiles[0]['name'].length && !acceptFileTypes.test(data.originalFiles[0]['name']))) {
+                && (data.originalFiles[0]['name'].length && !acceptFileTypes.test(data.originalFiles[0]['name']))) {
             uploadErrors.push('Not an accepted file type');
         }
         <?php } ?>
