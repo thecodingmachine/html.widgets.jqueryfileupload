@@ -15,8 +15,16 @@ $moufManager->getInstance('sessionManager')->start();
 $token = $_REQUEST['jqueryFileUploadUniqueId'];
 $targetDir = $_SESSION['mouf_jqueryfileupload_autorizeduploads'][$token];
 
+$instanceName = $_REQUEST['instanceName'];
+$uploader = MoufManager::getMoufManager()->get($instanceName);
+
+$uploader->beforeUpload($targetDir, $token);
+
+
 header('Content-Type: application/json');
 
 $upload_handler = new MoufUploadHandler([
 		'upload_dir'=>$targetDir
 ]);
+
+$uploader->afterUpload($targetDir, $token);

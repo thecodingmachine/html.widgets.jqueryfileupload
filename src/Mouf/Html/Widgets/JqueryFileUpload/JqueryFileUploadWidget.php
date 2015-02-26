@@ -51,6 +51,11 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 	protected $token;
 	
 	/**
+	 * @var JQueryFileUploadListenerInterface[]
+	 */
+	protected $uploadListeners;
+	
+	/**
 	 * The list of files that will be displayed below the file upload.
 	 * @var FileWidget[]
 	 */
@@ -633,6 +638,10 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 			"name" => "jqueryFileUploadUniqueId",
 			"value" => $token
 		];
+		$this->options['formData'][] = [
+			"name" => "instanceName",
+			"value" => MoufManager::getMoufManager()->findInstanceName($this)
+		];
 		
 		self::toHtmlParent();
 
@@ -901,12 +910,25 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 					if ($this->acceptFileTypes && !preg_match($this->acceptFileTypes, $fileInfo->getFilename())) {
 						throw new JqueryFileUploadException("Sorry, invalid file type for file '".$fileInfo->getFilename()."'");
 					}
-					
 					$files[] = new File($fileInfo->getFilename(), $fileInfo->getPath());
 				}
 			}
 		}
 		return $files;
+	}
+	
+	public function beforeUpload($targetDir, $token){
+		foreach ($this->uploadListeners as $listener){
+			/* @var $listener JQueryFileUploadListenerInterface. */
+			$listener->onBeforeUpload($targetDir, $token);
+		}
+	}
+
+	public function afterUpload($targetDir, $token){
+		foreach ($this->uploadListeners as $listener){
+			/* @var $listener JQueryFileUploadListenerInterface. */
+			$listener->onAfterUpload($targetDir, $token);
+		}
 	}
 	
 	/**
@@ -924,6 +946,14 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 	 */
 	public function addDefaultFile(FileWidget $file) {
 		$this->files[] = $file;
+	}
+	
+	/**
+	 * The set of listeners that will be called before and after upload is performed
+	 * @param JQueryFileUploadListenerInterface[] $listeners
+	 */
+	public function setJqueryFileUploadListeners($listeners){
+		$this->uploadListeners = $listeners;
 	}
 }
 ?>
