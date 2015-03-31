@@ -591,10 +591,10 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 			$this->options['formAcceptCharset'] = $this->formAcceptCharset;
 		}
 		if ($this->dropZoneCssSelector !== null) {
-			$this->options['dropZoneCssSelector'] = $this->dropZoneCssSelector;
+			$this->options['dropZone'] = $this->dropZoneCssSelector;
 		}
 		if ($this->pasteZoneCssSelector !== null) {
-			$this->options['pasteZoneCssSelector'] = $this->pasteZoneCssSelector;
+			$this->options['pasteZone'] = $this->pasteZoneCssSelector;
 		}
 		if ($this->sequentialUploads !== null) {
 			$this->options['sequentialUploads'] = $this->sequentialUploads;
