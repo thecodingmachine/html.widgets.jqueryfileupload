@@ -72,8 +72,8 @@ class File {
 	public function rename($newFileName) {
 		$fs = new Filesystem();
 		
-		$fs->rename($this->directory.'/'.$this->fileName, $this->directory.'/'.$this->$newFileName);
-		$fs->chmod($this->directory.'/'.$this->$newFileName, 0664);
+		$fs->rename($this->directory.'/'.$this->fileName, $this->directory.'/'.$newFileName);
+		$fs->chmod($this->directory.'/'.$newFileName, 0664);
 		$this->fileName = $newFileName;
 	}
 	
