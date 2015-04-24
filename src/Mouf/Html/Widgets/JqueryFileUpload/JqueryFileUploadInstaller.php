@@ -1,6 +1,7 @@
 <?php
 namespace Mouf\Html\Widgets\JqueryFileUpload;
 
+use Mouf\Actions\InstallUtils;
 use Mouf\Installer\PackageInstallerInterface;
 use Mouf\MoufManager;
 use Mouf\Html\Renderer\RendererUtils;
