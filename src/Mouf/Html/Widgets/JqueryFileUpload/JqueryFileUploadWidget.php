@@ -53,7 +53,7 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 	/**
 	 * @var JQueryFileUploadListenerInterface[]
 	 */
-	protected $uploadListeners;
+	protected $uploadListeners = [];
 	
 	/**
 	 * The list of files that will be displayed below the file upload.
