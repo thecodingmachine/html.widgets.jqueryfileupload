@@ -127,8 +127,25 @@ class MyController extends Controller {
 }
 ```
 
- 
+Moving uploaded files to their target directory
+------------------------------------------------
 
+Uploaded files are accessed via the `$fileUploadWidget->getFiles()` method. This returns an array of 
+`Mouf\Html\Widgets\JqueryFileUpload\File` objects.
+
+On the `$file` object, you can call the `move`, `rename` or `moveAndRename` methods to move the file in the target 
+location.
+
+- `move($targetDir, $mode = RenameEnum::MOVE)`: moves the file in a target directory, without renaming the file.
+- `rename($newFileName, $mode = RenameEnum::MOVE)`: renames the file.
+- `moveAndRename($targetDir, $newFileName, $mode = RenameEnum::MOVE)`: moves and renames the file.
+
+All these methods take an optional `$mode` argument that can take these three possible values:
+
+- `RenameEnum::MOVE`: If a file with the same name already exists, an exception is triggered
+- `RenameEnum::MOVE_AND_OVERWRITE`: If a file with the same name already exists, it is overwritten
+- `RenameEnum::MOVE_AND_RENAME`: If a file with the same name already exists, the file name is dynamically changed.
+  Call the `$file->getFileName()` method to get the new name.
 
 Customizing the display
 -----------------------

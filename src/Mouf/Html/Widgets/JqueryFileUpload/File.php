@@ -16,6 +16,7 @@ use Symfony\Component\Filesystem\Filesystem;
  * @author David Négrier
  */
 class File {
+
 	protected $fileName;
 	protected $directory;
 	
@@ -46,21 +47,28 @@ class File {
 	public function fileExists() {
 		return file_exists($this->directory.'/'.$this->fileName);
 	}
-	
+
 	/**
 	 * Moves the file to the target directory.
-	 * 
+	 *
 	 * @param string $targetDir
+	 * @param string $mode One of RenameEnum constants (MOVE, MOVE_AND_OVERWRITE, MOVE_AND_RENAME)
 	 */
-	public function move($targetDir) {
+	public function move($targetDir, $mode = RenameEnum::MOVE) {
 		$fs = new Filesystem();
 		if (!$fs->exists($targetDir)) {
 			$fs->mkdir($targetDir, 0775);
 			chmod($targetDir, 0775);
 		}
-		
-		$fs->rename($this->directory.'/'.$this->fileName, $targetDir.'/'.$this->fileName);
-		$fs->chmod($targetDir.'/'.$this->fileName, 0664);
+
+		if ($mode === RenameEnum::MOVE_AND_RENAME) {
+			$targetFileName = $this->getTargetName($targetDir, $this->fileName);
+		} else {
+			$targetFileName = $this->fileName;
+		}
+
+		$fs->rename($this->directory.'/'.$this->fileName, $targetDir.'/'.$targetFileName, $mode === RenameEnum::MOVE_AND_OVERWRITE);
+		$fs->chmod($targetDir.'/'.$targetFileName, 0664);
 		$this->directory = $targetDir;
 	}
 	
@@ -68,30 +76,44 @@ class File {
 	 * Renames the file (without changing the directory)
 	 * 
 	 * @param string $newFileName
+	 * @param string $mode One of RenameEnum constants (MOVE, MOVE_AND_OVERWRITE, MOVE_AND_RENAME)
 	 */
-	public function rename($newFileName) {
+	public function rename($newFileName, $mode = RenameEnum::MOVE) {
 		$fs = new Filesystem();
-		
-		$fs->rename($this->directory.'/'.$this->fileName, $this->directory.'/'.$newFileName);
-		$fs->chmod($this->directory.'/'.$newFileName, 0664);
+
+		if ($mode === RenameEnum::MOVE_AND_RENAME) {
+			$targetFileName = $this->getTargetName($this->directory, $newFileName);
+		} else {
+			$targetFileName = $this->fileName;
+		}
+
+		$fs->rename($this->directory.'/'.$this->fileName, $this->directory.'/'.$targetFileName, $mode === RenameEnum::MOVE_AND_OVERWRITE);
+		$fs->chmod($this->directory.'/'.$targetFileName, 0664);
 		$this->fileName = $newFileName;
 	}
 	
 	/**
 	 * Moves the file to the target directory.
 	 *
-	 * @param string $targetName
+	 * @param string $targetDir
 	 * @param string $newFileName
+	 * @param string $mode One of RenameEnum constants (MOVE, MOVE_AND_OVERWRITE, MOVE_AND_RENAME)
 	 */
-	public function moveAndRename($targetDir, $newFileName) {
+	public function moveAndRename($targetDir, $newFileName, $mode = RenameEnum::MOVE) {
 		$fs = new Filesystem();
 		if (!$fs->exists($targetDir)) {
 			$fs->mkdir($targetDir, 0775);
 			chmod($targetDir, 0775);
 		}
-		
-		$fs->rename($this->directory.'/'.$this->fileName, $targetDir.'/'.$newFileName);
-		$fs->chmod($targetDir.'/'.$newFileName, 0664);
+
+		if ($mode === RenameEnum::MOVE_AND_RENAME) {
+			$targetFileName = $this->getTargetName($targetDir, $newFileName);
+		} else {
+			$targetFileName = $this->fileName;
+		}
+
+		$fs->rename($this->directory.'/'.$this->fileName, $targetDir.'/'.$targetFileName, $mode === RenameEnum::MOVE_AND_OVERWRITE);
+		$fs->chmod($targetDir.'/'.$targetFileName, 0664);
 		$this->directory = $targetDir;
 		$this->fileName = $newFileName;
 	}
@@ -127,7 +149,38 @@ class File {
 	public function getDirectory() {
 		return $this->directory;
 	}
-	
-	
+
+	/**
+	 * Finds a valid file name for $fileName in directory $destPath
+	 * If the file already exists in $destPath, a new file name is proposed.
+	 *
+	 * @param string $destPath Destination directory
+	 * @param string $fileName
+	 * @return string
+	 */
+	private function getTargetName($destPath, $fileName) {
+		$fs = new Filesystem();
+		$counter = 1;
+
+		$pathInfo = pathinfo($fileName);
+		$baseFileName = $pathInfo['filename'];
+		$extension = $pathInfo['extension'];
+
+		while (true) {
+
+			if ($counter == 1) {
+				$newName = $fileName;
+			} else {
+				$newName = $baseFileName."_".$counter.'.'.$extension;
+			}
+
+			if (!$fs->exists($destPath.'/'.$newName)) {
+				break;
+			}
+			$counter++;
+		}
+
+		return $newName;
+	}
 	
 }
