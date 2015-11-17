@@ -42,8 +42,11 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 	protected $embedFormData;
 	
 	protected $acceptFileTypes;
+	protected $acceptFileTypesMessage = "Not an accepted file type";
 	protected $maxFileSize;
+	protected $maxFileSizeMessage = "Filesize is too big";
 	protected $minFileSize;
+	protected $minFileSizeMessage = "Filesize is too small";
 	protected $maxNumberOfFiles;
 	protected $disableValidation;
 	
