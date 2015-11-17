@@ -42,17 +42,17 @@ jQuery(function () {
         var acceptFileTypes = <?= $acceptFileTypes ?>;
         if((data.originalFiles[0]['type'].length && !acceptFileTypes.test(data.originalFiles[0]['type']))
                 && (data.originalFiles[0]['name'].length && !acceptFileTypes.test(data.originalFiles[0]['name']))) {
-            uploadErrors.push('<?= $acceptFileTypesMessage ?>');
+            uploadErrors.push(<?= json_encode($acceptFileTypesMessage) ?>);
         }
         <?php } ?>
         <?php if ($minFileSize) { ?>
         if(data.originalFiles[0]['size'].toString().length && data.originalFiles[0]['size'] < <?= $minFileSize ?>) {
-            uploadErrors.push('<?= $minFileSizeMessage ?>');
+            uploadErrors.push(<?= json_encode($minFileSizeMessage) ?>);
         }
         <?php } ?>
         <?php if ($maxFileSize) { ?>
         if(data.originalFiles[0]['size'].toString().length && data.originalFiles[0]['size'] > <?= $maxFileSize ?>) {
-            uploadErrors.push('<?= $maxFileSizeMessage ?>');
+            uploadErrors.push(<?= json_encode($maxFileSizeMessage) ?>);
         }
         <?php } ?>
         if(uploadErrors.length > 0) {
