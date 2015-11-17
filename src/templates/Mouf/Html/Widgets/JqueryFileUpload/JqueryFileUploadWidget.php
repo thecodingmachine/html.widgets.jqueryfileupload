@@ -42,17 +42,17 @@ jQuery(function () {
         var acceptFileTypes = <?= $acceptFileTypes ?>;
         if((data.originalFiles[0]['type'].length && !acceptFileTypes.test(data.originalFiles[0]['type']))
                 && (data.originalFiles[0]['name'].length && !acceptFileTypes.test(data.originalFiles[0]['name']))) {
-            uploadErrors.push('Not an accepted file type');
+            uploadErrors.push('<?= $acceptFileTypesMessage ?>');
         }
         <?php } ?>
         <?php if ($minFileSize) { ?>
-        if(data.originalFiles[0]['size'].length && data.originalFiles[0]['size'] < <?= $minFileSize ?>) {
-            uploadErrors.push('Filesize is too small');
+        if(data.originalFiles[0]['size'].toString().length && data.originalFiles[0]['size'] < <?= $minFileSize ?>) {
+            uploadErrors.push('<?= $minFileSizeMessage ?>');
         }
         <?php } ?>
         <?php if ($maxFileSize) { ?>
-        if(data.originalFiles[0]['size'].length && data.originalFiles[0]['size'] > <?= $maxFileSize ?>) {
-            uploadErrors.push('Filesize is too big');
+        if(data.originalFiles[0]['size'].toString().length && data.originalFiles[0]['size'] > <?= $maxFileSize ?>) {
+            uploadErrors.push('<?= $maxFileSizeMessage ?>');
         }
         <?php } ?>
         if(uploadErrors.length > 0) {

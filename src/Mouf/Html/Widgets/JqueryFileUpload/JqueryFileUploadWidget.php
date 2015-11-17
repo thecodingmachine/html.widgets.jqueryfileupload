@@ -42,8 +42,11 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 	protected $embedFormData;
 	
 	protected $acceptFileTypes;
+	protected $acceptFileTypesMessage = "Not an accepted file type";
 	protected $maxFileSize;
+	protected $maxFileSizeMessage = "Filesize is too big";
 	protected $minFileSize;
+	protected $minFileSizeMessage = "Filesize is too small";
 	protected $maxNumberOfFiles;
 	protected $disableValidation;
 	
@@ -321,6 +324,16 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 	}
 	
 	/**
+	 * The message to display when file doesnt match the $acceptFileTypes.
+	 *
+	 * @param string $acceptFileTypesMessage
+	 */
+	public function setAcceptFileTypesMessage($acceptFileTypesMessage) {
+		$this->acceptFileTypesMessage = $acceptFileTypesMessage;
+		return $this;
+	}
+
+	/**
 	 * The maximum allowed file size in bytes.
 	 * Example: 10000000 // 10 MB
 	 * 
@@ -333,6 +346,16 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 		$this->maxFileSize = $maxFileSize;
 		return $this;
 	}
+
+    /**
+     * The message to display when file is bigger then $maxFileSize.
+     *
+     * @param string $maxFileSizeMessage
+     */
+    public function setMaxFileSizeMessage($maxFileSizeMessage) {
+        $this->maxFileSizeMessage = $maxFileSizeMessage;
+        return $this;
+    }
 	
 	/**
 	 * The minimum allowed file size in bytes.
@@ -348,6 +371,16 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 		$this->minFileSize = $minFileSize;
 		return $this;
 	}
+
+    /**
+     * The message to display when file is smaller then $maxFileSize.
+     *
+     * @param string $minFileSizeMessage
+     */
+    public function setMinFileSizeMessage($minFileSizeMessage) {
+        $this->minFileSizeMessage = $minFileSizeMessage;
+        return $this;
+    }
 	
 	/**
 	 * This option limits the number of files that are allowed to be uploaded using this widget.
