@@ -22,7 +22,7 @@
 		"php" : ">=5.3.0",
 		"mouf/javascript.jquery.jquery-file-upload" : "*",
 		"mouf/html.htmlelement" : "~2.0",
-		"mouf/utils.session.session-manager" : "~2.0",
+		"mouf/utils.session.session-manager" : "~2.0 || ~3.0",
 		"mouf/utils.common.getvars" : "~2.0",
 		"mouf/html.renderer" : "~1.0",
 		"symfony/filesystem" : "~2.3",
