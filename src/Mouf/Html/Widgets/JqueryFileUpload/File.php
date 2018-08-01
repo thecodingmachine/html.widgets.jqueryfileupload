@@ -84,7 +84,7 @@ class File {
 		if ($mode === RenameEnum::MOVE_AND_RENAME) {
 			$targetFileName = $this->getTargetName($this->directory, $newFileName);
 		} else {
-			$targetFileName = $this->fileName;
+			$targetFileName = $newFileName;
 		}
 
 		$fs->rename($this->directory.'/'.$this->fileName, $this->directory.'/'.$targetFileName, $mode === RenameEnum::MOVE_AND_OVERWRITE);
@@ -109,7 +109,7 @@ class File {
 		if ($mode === RenameEnum::MOVE_AND_RENAME) {
 			$targetFileName = $this->getTargetName($targetDir, $newFileName);
 		} else {
-			$targetFileName = $this->fileName;
+			$targetFileName = $newFileName;
 		}
 
 		$fs->rename($this->directory.'/'.$this->fileName, $targetDir.'/'.$targetFileName, $mode === RenameEnum::MOVE_AND_OVERWRITE);
