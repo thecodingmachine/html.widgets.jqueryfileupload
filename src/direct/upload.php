@@ -24,7 +24,8 @@ $uploader->beforeUpload($targetDir, $token);
 header('Content-Type: application/json');
 
 $upload_handler = new MoufUploadHandler([
-		'upload_dir'=>$targetDir
+		'upload_dir'=>$targetDir,
+        'accept_file_types'=>$uploader->getAcceptFileTypes()
 ]);
 
 $uploader->afterUpload($targetDir, $token);

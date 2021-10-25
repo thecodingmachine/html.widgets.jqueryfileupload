@@ -322,7 +322,11 @@ class JqueryFileUploadWidget implements HtmlElementInterface {
 		$this->acceptFileTypes = $acceptFileTypes;
 		return $this;
 	}
-	
+
+    public function getAcceptFileTypes() {
+        return $this->acceptFileTypes;
+    }
+
 	/**
 	 * The message to display when file doesnt match the $acceptFileTypes.
 	 *
